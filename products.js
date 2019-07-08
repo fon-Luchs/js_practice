@@ -13,9 +13,36 @@ function Products(args = {}) {
         'http://scp-ru.wdfiles.com/local--files/scp-603/603.png'
     ];
 
+    Products.searchProduct = function(products_array = [], string = '') {
+        let mathces =  products_array.filter(item => item.name.indexOf(string) !== -1);
+        return mathces;
+    };
+
+    Products.sortProducts = function(products_array = [], key = '', order = '') {
+        if (key === 'price' || key === 'name' || key === 'id') {
+            let sorted_array = [ ...products_array ];
+
+            if(order === 'asc') {
+                sortByAsc(sorted_array, key);
+            } else if(order === 'desc') {
+                sortByDesc(sorted_array, key);
+            }
+
+            return sorted_array;
+        }
+
+        return 'invalid key';
+    };
+
+    Products.sortCurrentProductsArray = function(products_array = [], key = '') {
+        if (key === 'price' || key === 'name' || key === 'id') {
+            return products_array;
+        }
+    };
+
     //object columns
 
-    this.id          = 'id' + (new Date()).getTime();
+    this.id          = (new Date()).getTime();
     this.name        = args.name || 'empty';
     this.description = args.description || '';
     this.price       = args.price || 0.0;
@@ -183,21 +210,65 @@ function Products(args = {}) {
         this.reviews.push(review);
     };
 
-    this.deleteReview = function(review) {
-
+    this.deleteReview = function(review_id) {
+        this.reviews.forEach(function(review, i) {
+            if(review.id === review_id){
+                this.sizes.splice(i, 1);
+            }
+        });
     };
 
     this.getAverageRating = function() {
-
+        return {
+            value:   averageRatingsValue(this.reviews, 'value'),
+            service: averageRatingsValue(this.reviews, 'service'),
+            price:   averageRatingsValue(this.reviews, 'price'),
+            quality: averageRatingsValue(this.reviews, 'quality')
+        };
     };
-    
 
-    //object properties
-    Object.defineProperty(this, "getId", {enumerable: false});
-    Object.defineProperty(this, "getName", {enumerable: false});
-    Object.defineProperty(this, "getQuantity", {enumerable: false});
-    Object.defineProperty(this, "getQuantity", {enumerable: false});
-    Object.defineProperty(this, "getDate", {enumerable: false});
+    function averageRatingsValue(array = [], rating_type) {
+        let sum = 0;
+
+        array.forEach(function(review) {
+            sum += review.rating[rating_type];
+        });
+
+        if(sum === 0) {
+            return sum;
+        } else {
+            return (sum / array.length).toFixed(2);
+        }
+    }
+
+    function sortByAsc(sorted_array, key) {
+        if(key === 'price') {
+            return sorted_array.sort(sortByPriceAsc)
+        } else if(key === 'name') {
+            return sorted_array.sort(sortByNameAsc);
+        } else if(key === 'id') {
+            return sorted_array.sort(sortByIdAsc)
+        }
+    };
+
+    function sortByPriceAsc(a, b) {
+        if (a.price > b.price) return 1;
+        if (a.price < b.price) return -1;
+    }
+
+    function sortByNameAsc(a, b) {
+        if (a.name > b.name) return 1;
+        if (a.name < b.name) return -1;
+    }
+
+    function sortByIdAsc(a, b) {
+        if (a.id > b.id) return 1;
+        if (a.id < b.id) return -1;
+    }
+
+    function sortByDesc(sorted_array, key) {
+        return sortByAsc(sorted_array, key).reverse();
+    }
 }
 
 function Review(args = {}) {
@@ -223,6 +294,25 @@ function isString(value) {
     return typeof value === 'string' || value instanceof String;
 }
 
-tst = new Products({name: 'Loller', activeSize: 'lol'});
+let tst = new Products({name: 'Loller', activeSize: 'lol', price: 2});
 
-console.log(tst);
+let tst_2 =  new Products({name: 'Loller', activeSize: 'lol', price: 4});
+
+for(let i = 0; i < 10; i++) {
+    tst.addReview({
+        author: 'Banger',
+        comment: 'OHHHHHHHHHH',
+        rating: {
+            value:   Math.floor(Math.random() * 5),
+            service: Math.floor(Math.random() * 5),
+            price:   Math.floor(Math.random() * 5),
+            quality: Math.floor(Math.random() * 5)
+        }
+    });
+}
+
+// console.log(tst.getAverageRating());
+
+// console.log(Products.searchProduct([tst], 'Lol'))
+
+// console.log(Products.sortProducts([tst, tst_2], 'price', 'desc'))
