@@ -32,79 +32,49 @@ function AbstractProduct(args = {}) {
   }
 
   Object.defineProperty(AbstractProduct.prototype, 'id', {
-    get: function() {
-      return this._id
-    }
+    get: () => { return this._id }
   });
   
   Object.defineProperty(AbstractProduct.prototype, 'name', {
-    get: function() {
-      return this._name;
-    },
+    get: () => { return this._name; },
   
-    set: function(name) {
-      this._name = name;
-    }
+    set: (name) => { this._name = name; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'description', {
-    get: function() {
-      return this._description;
-    },
+    get: () => { return this._description; },
   
-    set: function(description) {
-      this._description = description;
-    }
+    set: (description) => { this._description = description; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'price', {
-    get: function() {
-      return this._price
-    },
+    get: () => { return this._price },
 
-    set: function(price) {
-      this._price = price
-    }
+    set: (price) => { this._price = price; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'images', {
-    get: function() {
-      return this._images;
-    }
+    get: () => { return this._images; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'brand', {
-    get: function() {
-      return this._brand;
-    },
+    get: () => { return this._brand; },
 
-    set: function(brand) {
-      this._brand = brand;
-    }
+    set: (brand) => { this._brand = brand; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'data', {
-    get: function() {
-      return this._data;
-    },
+    get: () => { return this._data; },
 
-    set: function(date) {
-      if (date instanceof Date){
-        this._date = date;
-      }
-    }
+    set: (date) => { if (date instanceof Date) this._date = date; }
   });
   
   Object.defineProperty(AbstractProduct.prototype, 'quantity', {
-    get: function() {
-      return this._quantity
-    }
+    get: () => { return this._quantity }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'reviews', {
-    get: function() {
-      return this._reviews
-    }
+    get: () => { return this._reviews }
   });
 };
 
@@ -240,6 +210,16 @@ AbstractProduct.prototype.getReviewById = function(id) {
   }
 };
 
+AbstractProduct.prototype.attrAccessor = function(args)
+  { 
+    if(args.value) {
+      console.log(this[args.key] + ' ' + args.value)
+      this[args.key] = args.value;
+    } else {
+      return this[args.key];
+    }
+  }
+
 function Review(args = {}) {
   this._id      = 'id' + (new Date()).getTime();
   this._author  = args.author  || 'incognito';
@@ -264,7 +244,7 @@ function Electronics(args = {}) {
 
   function validateWarranty(warranty) {
       if(warranty) {
-          return (warranty < 0 || warranty === 0) ? 0 : warranty;
+          return (warranty < 0 || warranty === 0) ? false : warranty;
       }
   }
 }
@@ -274,37 +254,37 @@ _extend(Electronics, AbstractProduct);
 function Clothers(args = {}) {
   AbstractProduct.apply(this, arguments);
 
-  this._material = args.material || 'unknow';
-  this._color    = args.color    || 'unknow' 
-  this._sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  this._activeSize  = validatesSize(this.sizes);
-
-  function validatesSize(sizes) {
-    if (!args.activeSize) {
-        return 'invalid size';
-    } else if (sizes.includes(args.activeSize.toUpperCase())) {
-        return args.activeSize;
-    } else {
-        return 'invalid size';
-    }
+  const validatesSize = (activeSize) => {
+    if (!activeSize) {
+        return false;
+    } else if (this._sizes.includes(activeSize.toUpperCase())) {
+        return activeSize;
+      }
+    return false;
   };
 
+  this._material    = args.material || 'unknow';
+  this._color       = args.color    || 'unknow' 
+  this._sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  this._activeSize  = validatesSize(args.activeSize) || 'undefined size';
+
   Object.defineProperty(Clothers.prototype, 'sizes', {
-    get: function() {
-      return this._sizes
-    }
+    get: () => { return this._sizes; }
   });
 
   Object.defineProperty(Clothers.prototype, 'activeSize', {
-    get: function() {
-      return this._activeSize
-    },
+    get: () => { return this._activeSize; },
 
     set: function(size) {
-      let newSize = validatesSize(size);
-      this._activeSize = newSize === 'invalid size' ? this._activeSize : newSize;
+      if(validatesSize(size)) _activeSize = size;
     }
-  })
+  });
+
+  Object.defineProperty(Clothers.prototype, 'color', {
+    get: () => { return this._color; },
+
+    set: (color) => { this._color = color; }
+  });
 }
 
 _extend(Clothers, AbstractProduct);
@@ -332,12 +312,6 @@ Clothers.prototype.deleteSize = function(size_index = 0) {
   }
 };
 
-let tst = new Clothers({
-  material: 'TEST',
-  color: 'Black',
-  price: 12.21
-})
-
 function _extend(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -361,3 +335,8 @@ function isString(value) {
   return typeof value === 'string' || value instanceof String;
 }
 
+let tst = new Clothers()
+
+console.log(tst.attrAccessor({key: 'activeSize', value: 'XS'}));
+
+console.log(tst);
