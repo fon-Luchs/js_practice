@@ -3,11 +3,15 @@ function AbstractProduct(args = {}) {
       throw new Error('Cannot instantiate abstractclass');
   }
 
-  this.id          = (new Date()).getTime();
-  this.name        = args.name        || 'empty';
-  this.description = args.description || ' ';
-  this.price       = args.price       || 0.0;
-  this.images      = validatesImagesArray(args.images);
+  this._id          = (new Date()).getTime();
+  this._name        = args.name        || 'empty';
+  this._description = args.description || ' ';
+  this._price       = +args.price      || 0.0;
+  this._images      = validatesImagesArray(args.images);
+  this._brand       = args.brand || 'empty';
+  this._quantity    = AbstractProduct.quantity;
+  this._reviews     = [];
+  this.date         = args.date || new Date;
   
   function validatesImagesArray(array) {
     if (Array.isArray(array)) {
@@ -26,7 +30,89 @@ function AbstractProduct(args = {}) {
   
     return array;
   }
+
+  Object.defineProperty(AbstractProduct.prototype, 'id', {
+    get: function() {
+      return this._id
+    }
+  });
+  
+  Object.defineProperty(AbstractProduct.prototype, 'name', {
+    get: function() {
+      return this._name;
+    },
+  
+    set: function(name) {
+      this._name = name;
+    }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'description', {
+    get: function() {
+      return this._description;
+    },
+  
+    set: function(description) {
+      this._description = description;
+    }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'price', {
+    get: function() {
+      return this._price
+    },
+
+    set: function(price) {
+      this._price = price
+    }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'images', {
+    get: function() {
+      return this._images;
+    }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'brand', {
+    get: function() {
+      return this._brand;
+    },
+
+    set: function(brand) {
+      this._brand = brand;
+    }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'data', {
+    get: function() {
+      return this._data;
+    },
+
+    set: function(date) {
+      if (date instanceof Date){
+        this._date = date;
+      }
+    }
+  });
+  
+  Object.defineProperty(AbstractProduct.prototype, 'quantity', {
+    get: function() {
+      return this._quantity
+    }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'reviews', {
+    get: function() {
+      return this._reviews
+    }
+  });
 };
+
+if (AbstractProduct.quantity === undefined){
+    AbstractProduct.quantity = 0;
+} else {
+    if(AbstractProduct.quantity > 0) AbstractProduct.count--;
+}
 
 AbstractProduct.defaultImages = [
   'http://scp-ru.wdfiles.com/local--files/scp-603/603.png',
@@ -96,17 +182,85 @@ AbstractProduct.prototype.getPriceForQuantiry = function(count) {
 }
 
 AbstractProduct.prototype.getFullInformation = function() {
-  return  '-' + this.id   + '-' + '\n' +
-          '-' + this.name + '-' + '\n' +
-          '-' + this.description + '-' + '\n' +
-          '-' + this.images      + '-' + '\n' + this.resourceFields();
+  return  '-' + this._id   + '-' + '\n' +
+          '-' + this._name + '-' + '\n' +
+          '-' + this._description + '-' + '\n' +
+          '-' + this._images      + '-' + '\n' + this.resourceFields();
 };
+
+AbstractProduct.prototype.addReview = function(args = {}){
+  let review = new Review(args);
+  this._reviews.push(review);
+};
+
+AbstractProduct.prototype.deleteReview = function(review_id) {
+  this._reviews.forEach(function(review, i) {
+      if(review.id === review_id){
+          this._reviews.splice(i, 1);
+      }
+  });
+};
+
+AbstractProduct.prototype.getAverageRating = function() {
+  return {
+      value:   averageRatingsValue(this.reviews, 'value'),
+      service: averageRatingsValue(this.reviews, 'service'),
+      price:   averageRatingsValue(this.reviews, 'price'),
+      quality: averageRatingsValue(this.reviews, 'quality')
+  };
+};
+
+AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type) {
+  let sum = 0;
+
+  array.forEach(function(review) {
+      sum += review.rating[rating_type];
+  });
+
+  return sum === 0 ? sum : (sum / array.length).toFixed(2);
+}
+
+AbstractProduct.prototype.getImage = function(image_index = 0) {
+  if(image_index > this.images.length || image_index < 0) {
+      return this._images[0];
+  }
+
+  return this._images[image_index];
+};
+
+AbstractProduct.prototype.getReviewById = function(id) {
+  let review = function() {
+    this._reviews.forEach(function(object) {
+      Object.keys(object).forEach(function(key) {
+        if(object[key] == id) return object
+      });
+    });
+
+    return review ? review : 'record not found'
+  }
+};
+
+function Review(args = {}) {
+  this._id      = 'id' + (new Date()).getTime();
+  this._author  = args.author  || 'incognito';
+  this._date    = args.date    || new Date;
+  this._comment = args.comment || '';
+  this._rating  = args.rating ? new Rating(args.rating) : new Rating;
+}
+
+function Rating(args = {}) {
+   this._value   = +args.value   || 0;
+   this._service = +args.service || 0;
+   this._price   = +args.price   || 0;
+   this._quality = +args.quality || 0;
+}
+
 
 function Electronics(args = {}) {
   AbstractProduct.apply(this, arguments);
 
-  this.warranty = validateWarranty(this.warranty) || 0;
-  this.power    = args.power || 0;
+  this._warranty = validateWarranty(this.warranty) || 0;
+  this._power    = args.power || 0;
 
   function validateWarranty(warranty) {
       if(warranty) {
@@ -120,16 +274,63 @@ _extend(Electronics, AbstractProduct);
 function Clothers(args = {}) {
   AbstractProduct.apply(this, arguments);
 
-  this.material = args.material || 'unknow';
-  this.color    = args.color    || 'unknow' 
+  this._material = args.material || 'unknow';
+  this._color    = args.color    || 'unknow' 
+  this._sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  this._activeSize  = validatesSize(this.sizes);
+
+  function validatesSize(sizes) {
+    if (!args.activeSize) {
+        return 'invalid size';
+    } else if (sizes.includes(args.activeSize.toUpperCase())) {
+        return args.activeSize;
+    } else {
+        return 'invalid size';
+    }
+  };
+
+  Object.defineProperty(Clothers.prototype, 'sizes', {
+    get: function() {
+      return this._sizes
+    }
+  });
+
+  Object.defineProperty(Clothers.prototype, 'activeSize', {
+    get: function() {
+      return this._activeSize
+    },
+
+    set: function(size) {
+      let newSize = validatesSize(size);
+      this._activeSize = newSize === 'invalid size' ? this._activeSize : newSize;
+    }
+  })
 }
 
 _extend(Clothers, AbstractProduct);
 
 Clothers.prototype.resourceFields = function() {
-  return '-' + this.material + '-' + '\n' +
-         '-' + this.color    + '-' + '\n'
+  return '-' + this._material + '-' + '\n' +
+         '-' + this._color    + '-' + '\n'
 }
+
+Clothers.prototype.addSize = function(size) {
+  if(this.sizes.includes(size.toUpperCase())) {
+      return 'Already exist';
+  } else {
+      this.sizes.push(sizu.toUpperCase());
+  }
+};
+
+Clothers.prototype.deleteSize = function(size_index = 0) {
+  if(size_index > this._sizes.length || size_index < 0) {
+    return 'Invalid value';
+  } else {
+      this._sizes.forEach(function(){
+        if ( this.sizes[i] === size_index) this.sizes.splice(i, 1); 
+      });
+  }
+};
 
 let tst = new Clothers({
   material: 'TEST',
@@ -159,3 +360,4 @@ function _extend(subClass, superClass) {
 function isString(value) {
   return typeof value === 'string' || value instanceof String;
 }
+
