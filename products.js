@@ -276,7 +276,7 @@ function Clothers(args = {}) {
     get: () => { return this._activeSize; },
 
     set: function(size) {
-      if(validatesSize(size)) _activeSize = size;
+      if(validatesSize(size)) this._activeSize = size;
     }
   });
 
