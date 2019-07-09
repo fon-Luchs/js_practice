@@ -50,7 +50,7 @@ function AbstractProduct(args = {}) {
   Object.defineProperty(AbstractProduct.prototype, 'price', {
     get: () => { return _price },
 
-    set: (price) => { _price = price; }
+    set: (price) => { if(!isString(price)) _price = price; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'images', {
@@ -63,8 +63,8 @@ function AbstractProduct(args = {}) {
     set: (brand) => { _brand = brand; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'data', {
-    get: () => { return _data; },
+  Object.defineProperty(AbstractProduct.prototype, 'date', {
+    get: () => { return _date; },
 
     set: (date) => { if (date instanceof Date) _date = date; }
   });
@@ -155,7 +155,12 @@ AbstractProduct.prototype.getFullInformation = function() {
   return  'ID> '          + this.id   + '\n' +
           'NAME> '        + this.name + '\n' +
           'DESCRIPTION> ' + this.description + '\n' +
-          'IMAGES> '      + this.images      + '\n' + this.resourceFields();
+          'PRICE> '       + this.price       + '\n' +
+          'IMAGES> '      + this.images      + '\n' +
+          'BRAND> '       + this.brand       + '\n' +
+          'QUANTITY> '    + this.quantity    + '\n' +
+          'REVIEWS> '     + this.reviews     + '\n' +
+          'DATE> '        + this.date        + '\n' + this.resourceFields();
 };
 
 AbstractProduct.prototype.addReview = function(args = {}){
