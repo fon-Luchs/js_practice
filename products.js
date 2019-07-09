@@ -3,15 +3,15 @@ function AbstractProduct(args = {}) {
       throw new Error('Cannot instantiate abstractclass');
   }
 
-  this._id          = (new Date()).getTime();
-  this._name        = args.name        || 'empty';
-  this._description = args.description || ' ';
-  this._price       = +args.price      || 0.0;
-  this._images      = validatesImagesArray(args.images);
-  this._brand       = args.brand || 'empty';
-  this._quantity    = AbstractProduct.quantity;
-  this._reviews     = [];
-  this.date         = args.date || new Date;
+  let _id          = (new Date()).getTime();
+  let _name        = args.name        || 'empty';
+  let _description = args.description || ' ';
+  let _price       = +args.price      || 0.0;
+  let _images      = validatesImagesArray(args.images);
+  let _brand       = args.brand || 'empty';
+  let _quantity    = AbstractProduct.quantity;
+  let _reviews     = [];
+  let _date        = args.date || new Date;
   
   function validatesImagesArray(array) {
     if (Array.isArray(array)) {
@@ -32,49 +32,49 @@ function AbstractProduct(args = {}) {
   }
 
   Object.defineProperty(AbstractProduct.prototype, 'id', {
-    get: () => { return this._id }
+    get: () => { return _id }
   });
   
   Object.defineProperty(AbstractProduct.prototype, 'name', {
-    get: () => { return this._name; },
+    get: () => { return _name; },
   
-    set: (name) => { this._name = name; }
+    set: (name) => { _name = name; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'description', {
-    get: () => { return this._description; },
+    get: () => { return _description; },
   
-    set: (description) => { this._description = description; }
+    set: (description) => { _description = description; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'price', {
-    get: () => { return this._price },
+    get: () => { return _price },
 
-    set: (price) => { this._price = price; }
+    set: (price) => { _price = price; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'images', {
-    get: () => { return this._images; }
+    get: () => { return _images; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'brand', {
-    get: () => { return this._brand; },
+    get: () => { return _brand; },
 
-    set: (brand) => { this._brand = brand; }
+    set: (brand) => { _brand = brand; }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'data', {
-    get: () => { return this._data; },
+    get: () => { return _data; },
 
-    set: (date) => { if (date instanceof Date) this._date = date; }
+    set: (date) => { if (date instanceof Date) _date = date; }
   });
   
   Object.defineProperty(AbstractProduct.prototype, 'quantity', {
-    get: () => { return this._quantity }
+    get: () => { return _quantity }
   });
 
   Object.defineProperty(AbstractProduct.prototype, 'reviews', {
-    get: () => { return this._reviews }
+    get: () => { return _reviews }
   });
 };
 
@@ -152,21 +152,21 @@ AbstractProduct.prototype.getPriceForQuantiry = function(count) {
 }
 
 AbstractProduct.prototype.getFullInformation = function() {
-  return  '-' + this._id   + '-' + '\n' +
-          '-' + this._name + '-' + '\n' +
-          '-' + this._description + '-' + '\n' +
-          '-' + this._images      + '-' + '\n' + this.resourceFields();
+  return  'ID> '          + this.id   + '\n' +
+          'NAME> '        + this.name + '\n' +
+          'DESCRIPTION> ' + this.description + '\n' +
+          'IMAGES> '      + this.images      + '\n' + this.resourceFields();
 };
 
 AbstractProduct.prototype.addReview = function(args = {}){
   let review = new Review(args);
-  this._reviews.push(review);
+  this.reviews.push(review);
 };
 
 AbstractProduct.prototype.deleteReview = function(review_id) {
-  this._reviews.forEach(function(review, i) {
+  this.reviews.forEach(function(review, i) {
       if(review.id === review_id){
-          this._reviews.splice(i, 1);
+          this.reviews.splice(i, 1);
       }
   });
 };
@@ -192,15 +192,15 @@ AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type
 
 AbstractProduct.prototype.getImage = function(image_index = 0) {
   if(image_index > this.images.length || image_index < 0) {
-      return this._images[0];
+      return this.images[0];
   }
 
-  return this._images[image_index];
+  return this.images[image_index];
 };
 
 AbstractProduct.prototype.getReviewById = function(id) {
   let review = function() {
-    this._reviews.forEach(function(object) {
+    this.reviews.forEach(function(object) {
       Object.keys(object).forEach(function(key) {
         if(object[key] == id) return object
       });
@@ -213,7 +213,6 @@ AbstractProduct.prototype.getReviewById = function(id) {
 AbstractProduct.prototype.attrAccessor = function(args)
   { 
     if(args.value) {
-      console.log(this[args.key] + ' ' + args.value)
       this[args.key] = args.value;
     } else {
       return this[args.key];
@@ -221,35 +220,83 @@ AbstractProduct.prototype.attrAccessor = function(args)
   }
 
 function Review(args = {}) {
-  this._id      = 'id' + (new Date()).getTime();
-  this._author  = args.author  || 'incognito';
-  this._date    = args.date    || new Date;
-  this._comment = args.comment || '';
-  this._rating  = args.rating ? new Rating(args.rating) : new Rating;
+  let _id      = 'id' + (new Date()).getTime();
+  let _author  = args.author  || 'incognito';
+  let _date    = args.date    || new Date;
+  let _comment = args.comment || '';
+  let _rating  = args.rating ? new Rating(args.rating) : new Rating;
+
+  Object.defineProperty(AbstractProduct.prototype, 'id', {
+    get: () => { return _id }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'author', {
+    get: () => { return _author; }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'date', {
+    get: () => { return _date; }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'comment', {
+    get: () => { return _comment; }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'rating', {
+    get: () => { return _rating; }
+  });
 }
 
 function Rating(args = {}) {
-   this._value   = +args.value   || 0;
-   this._service = +args.service || 0;
-   this._price   = +args.price   || 0;
-   this._quality = +args.quality || 0;
-}
+   let _value   = +args.value   || 0;
+   let _service = +args.service || 0;
+   let _price   = +args.price   || 0;
+   let _quality = +args.quality || 0;
 
+   Object.defineProperty(AbstractProduct.prototype, 'value', {
+    get: () => { return _value }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'service', {
+    get: () => { return _service; }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'price', {
+    get: () => { return _price; }
+  });
+
+  Object.defineProperty(AbstractProduct.prototype, 'quality', {
+    get: () => { return _quality; }
+  });
+}
 
 function Electronics(args = {}) {
   AbstractProduct.apply(this, arguments);
 
-  this._warranty = validateWarranty(this.warranty) || 0;
-  this._power    = args.power || 0;
+  let _warranty = validateWarranty(this.warranty) || 0;
+  let _power    = args.power || 0;
 
   function validateWarranty(warranty) {
       if(warranty) {
           return (warranty < 0 || warranty === 0) ? false : warranty;
       }
   }
+
+  Object.defineProperty(Clothers.prototype, 'warranty', {
+    get: () => { return _warranty; }
+  });
+
+  Object.defineProperty(Clothers.prototype, 'power', {
+    get: () => { return _power; }
+  });
 }
 
 _extend(Electronics, AbstractProduct);
+
+Electronics.prototype.resourceFields = function() {
+  return 'WARRANTY> ' + this.warranty + '-' + '\n' +
+         'POWER> '    + this.power    + '-' + '\n'
+}
 
 function Clothers(args = {}) {
   AbstractProduct.apply(this, arguments);
@@ -257,53 +304,58 @@ function Clothers(args = {}) {
   const validatesSize = (activeSize) => {
     if (!activeSize) {
         return false;
-    } else if (this._sizes.includes(activeSize.toUpperCase())) {
+    } else if (_sizes.includes(activeSize.toUpperCase())) {
         return activeSize;
       }
     return false;
   };
 
-  this._material    = args.material || 'unknow';
-  this._color       = args.color    || 'unknow' 
-  this._sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-  this._activeSize  = validatesSize(args.activeSize) || 'undefined size';
+  let _material    = args.material || 'unknow';
+  let _color       = args.color    || 'unknow' 
+  let _sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  let _activeSize  = validatesSize(args.activeSize) || 'undefined size';
 
   Object.defineProperty(Clothers.prototype, 'sizes', {
-    get: () => { return this._sizes; }
+    get: () => { return _sizes; }
+  });
+
+  Object.defineProperty(Clothers.prototype, 'material', {
+    get: () => { return _material; }
   });
 
   Object.defineProperty(Clothers.prototype, 'activeSize', {
-    get: () => { return this._activeSize; },
+    get: () => { return _activeSize; },
 
     set: function(size) {
-      if(validatesSize(size)) this._activeSize = size;
+      if(validatesSize(size)) _activeSize = size;
     }
   });
 
   Object.defineProperty(Clothers.prototype, 'color', {
-    get: () => { return this._color; },
+    get: () => { return _color; },
 
-    set: (color) => { this._color = color; }
+    set: (color) => { _color = color; }
   });
 }
 
 _extend(Clothers, AbstractProduct);
 
 Clothers.prototype.resourceFields = function() {
-  return '-' + this._material + '-' + '\n' +
-         '-' + this._color    + '-' + '\n'
+  return 'MATERIAL> ' + this.material +  '\n' +
+         'COLOR> '    + this.color    +  '\n' +
+         'ACTIVESIZE> ' + this.activeSize + '\n'
 }
 
 Clothers.prototype.addSize = function(size) {
   if(this.sizes.includes(size.toUpperCase())) {
       return 'Already exist';
   } else {
-      this.sizes.push(sizu.toUpperCase());
+      this.sizes.push(size.toUpperCase());
   }
 };
 
 Clothers.prototype.deleteSize = function(size_index = 0) {
-  if(size_index > this._sizes.length || size_index < 0) {
+  if(size_index > this.sizes.length || size_index < 0) {
     return 'Invalid value';
   } else {
       this._sizes.forEach(function(){
@@ -334,9 +386,3 @@ function _extend(subClass, superClass) {
 function isString(value) {
   return typeof value === 'string' || value instanceof String;
 }
-
-let tst = new Clothers()
-
-console.log(tst.attrAccessor({key: 'activeSize', value: 'XS'}));
-
-console.log(tst);
