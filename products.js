@@ -332,12 +332,6 @@ Clothers.prototype.deleteSize = function(size_index = 0) {
   }
 };
 
-let tst = new Clothers({
-  material: 'TEST',
-  color: 'Black',
-  price: 12.21
-})
-
 function _extend(subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
