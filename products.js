@@ -89,11 +89,6 @@ AbstractProduct.defaultImages = [
   'http://scp-ru.wdfiles.com/local--files/scp-603/603.png'
 ];
 
-AbstractProduct.searchProduct = function(products_array = [], string = '') {
-  let mathces =  products_array.filter(item => item.name.indexOf(string) !== -1);
-  return mathces;
-};
-
 AbstractProduct.sortProducts = function(products_array = [], key = '', order = '') {
   if (key === 'price' || key === 'name' || key === 'id') {
       let sorted_array = [ ...products_array ];
@@ -128,12 +123,6 @@ AbstractProduct.sortProducts = function(products_array = [], key = '', order = '
   }
 
   return 'invalid key';
-};
-
-AbstractProduct.sortCurrentProductsArray = function(products_array = [], key = '') {
-  if (key === 'price' || key === 'name' || key === 'id') {
-      return products_array;
-  }
 };
 
 AbstractProduct.sortByAsc = function(sorted_array, key) {
@@ -341,6 +330,12 @@ function Clothers(args = {}) {
 
     set: (color) => { _color = color; }
   });
+
+  Object.defineProperty(Clothers.prototype, 'material', {
+    get: () => { return _material; },
+
+    set: (material) => { _material = material; }
+  });
 }
 
 _extend(Clothers, AbstractProduct);
@@ -363,7 +358,7 @@ Clothers.prototype.deleteSize = function(size_index = 0) {
   if(size_index > this.sizes.length || size_index < 0) {
     return 'Invalid value';
   } else {
-      this._sizes.forEach(function(){
+      this.sizes.forEach(function(){
         if ( this.sizes[i] === size_index) this.sizes.splice(i, 1); 
       });
   }
