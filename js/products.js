@@ -264,32 +264,6 @@ function Rating(args = {}) {
   });
 }
 
-
-const valid = {
-  phone: s => { /^(\+[\d]{2})?(([\s-]*)(\()?([\s-]*)(\d)([\s-]*)(\d)([\s-]*)(\d)(\))?)(([\s-]*[\d][\s-]*){7})$/.test(s)},
-}
-
-function Validator() {
-  Validator.validatePhone = function (phone) { return isString(phone) ? validatePhoneFormat(phone) : false };
-  Validator.validateEmail =  (email) => { return isString(email) ? validateEmailFormat(email) : false };
-  Validator.validatePassword = function (pass) { return isString(pass) ? validatePassFormat(pass) : false };
-
-  function validateEmailFormat(email) {
-    let emailRegex = /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/;
-    return emailRegex.test(email);
-  }
-  
-  function validatePhoneFormat(phone) {
-    let phoneRegex = /^(\+[\d]{2})?(([\s-]*)(\()?([\s-]*)(\d)([\s-]*)(\d)([\s-]*)(\d)(\))?)(([\s-]*[\d][\s-]*){7})$/;
-    return phoneRegex.test(phone);
-  }
-  
-  function validatePassFormat(pass) {
-    return false
-  }
-  return a;
-}
-
 function Electronics(args = {}) {
   AbstractProduct.apply(this, arguments);
 
@@ -316,6 +290,26 @@ _extend(Electronics, AbstractProduct);
 Electronics.prototype.resourceFields = function() {
   return 'WARRANTY> ' + this.warranty + '-' + '\n' +
          'POWER> '    + this.power    + '-' + '\n'
+}
+
+const validator = {
+  validateEmail(email) {
+    const validateEmailFormat = (email) => { return /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email) };
+
+    return isString(email) ? validateEmailFormat(email) : false
+  },
+
+  validatePhone(phone) {
+    const validatePhoneFormat = (phone) => { return /^(\+[\d]{2})?(([\s-]*)(\()?([\s-]*)(\d)([\s-]*)(\d)([\s-]*)(\d)(\))?)(([\s-]*[\d][\s-]*){7})$/.test(phone) };
+
+    return isString(phone) ? validatePhoneFormat(phone) : false
+  },
+
+  validatePassword(pass) {
+    const validatePasswordFormat = (pass) => { return /^(?=.*\d)(?=.*[!@#\$%\^&\*_-])(?=.*\w)[\d\w\s]{8,24}$/.test(pass) };
+
+    return isString(pass) ? validatePasswordFormat(pass) : false
+  }
 }
 
 function Clothers(args = {}) {
