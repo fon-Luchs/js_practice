@@ -31,49 +31,49 @@ function AbstractProduct(args = {}) {
     return array;
   }
 
-  Object.defineProperty(AbstractProduct.prototype, 'id', {
+  Object.defineProperty(this, 'id', {
     get: () => { return _id }
   });
   
-  Object.defineProperty(AbstractProduct.prototype, 'name', {
-    get: () => { return _name; },
+  Object.defineProperty(this, 'name', {
+    get: () => { return _name; }, 
   
     set: (name) => { _name = name; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'description', {
+  Object.defineProperty(this, 'description', {
     get: () => { return _description; },
   
     set: (description) => { _description = description; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'price', {
-    get: () => { return _price },
+  Object.defineProperty(this, 'price', {
+    get: () => { return _price }, configurable: true,
 
     set: (price) => { if(!isString(price)) _price = price; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'images', {
+  Object.defineProperty(this, 'images', {
     get: () => { return _images; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'brand', {
+  Object.defineProperty(this, 'brand', {
     get: () => { return _brand; },
 
     set: (brand) => { _brand = brand; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'date', {
+  Object.defineProperty(this, 'date', {
     get: () => { return _date; },
 
     set: (date) => { if (date instanceof Date) _date = date; }
   });
   
-  Object.defineProperty(AbstractProduct.prototype, 'quantity', {
+  Object.defineProperty(this, 'quantity', {
     get: () => { return _quantity }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'reviews', {
+  Object.defineProperty(this, 'reviews', {
     get: () => { return _reviews }
   });
 };
@@ -130,11 +130,13 @@ AbstractProduct.sortByAsc = function(sorted_array, key) {
     if (a[key] > b[key]) return 1;
     if (a[key] < b[key]) return -1;
   });
-}
+};
 
 AbstractProduct.sortByDesc = function(sorted_array, key) {
   return sortByAsc(sorted_array, key).reverse();
-}
+};
+
+AbstractProduct.createProductTileHTML = function() {}
 
 AbstractProduct.prototype.getPriceForQuantiry = function(count) {
   return '$' + this.price * +count;
@@ -204,14 +206,60 @@ AbstractProduct.prototype.getReviewById = function(id) {
   }
 };
 
-AbstractProduct.prototype.attrAccessor = function(args)
-  { 
-    if(args.value) {
-      this[args.key] = args.value;
-    } else {
-      return this[args.key];
-    }
+AbstractProduct.prototype.attrAccessor = function(args) { 
+  if(args.value) {
+    this[args.key] = args.value;
+  } else {
+    return this[args.key];
   }
+};
+
+AbstractProduct.prototype.getProductTileHTML = function() {
+  
+  let mainSection = document.createElement('section')
+  let divPriceBox = document.createElement('div');
+  let spanRegularPrice = document.createElement('span');
+  let spanPrice = document.createElement('span');
+  let productName = document.createElement('h3');
+  let productArchor = document.createElement('a');
+  let classHolder = document.createElement('div');
+  let quickviewArchor = document.createElement('a');
+  let heroBody = document.createElement('div');
+  let container = document.createElement('div');
+  let subtitle = document.createElement('div');
+
+  mainSection.className = 'product-main-div hero is-medium is-primary is-bold';
+  heroBody.className = 'hero-body';
+  container.className = 'container';
+  productName.className = 'product-name title';
+  productArchor.href    = '#';
+  divPriceBox.className = 'price-box';
+  spanRegularPrice.className = 'regular-price';
+  spanPrice.className        = 'price';
+  classHolder.className = 'holder';
+  quickviewArchor.className = 'quickview';
+  quickviewArchor.rel = 'nofollow';
+  quickviewArchor.href = '#';
+  subtitle.className = 'subtitle';
+
+  spanPrice.innerText     = '$' + this.price;
+  productArchor.innerHTML = this.name;
+  subtitle.innerHTML = this.description;
+  quickviewArchor.innerHTML = 'Quickview';
+
+  mainSection.appendChild(heroBody);
+  heroBody.appendChild(container);
+  container.appendChild(productName);
+  productName.appendChild(productArchor);
+  container.appendChild(subtitle);
+  container.appendChild(divPriceBox);
+  divPriceBox.appendChild(spanRegularPrice);
+  spanRegularPrice.appendChild(spanPrice);
+  container.appendChild(classHolder);
+  classHolder.appendChild(quickviewArchor);
+
+  return mainSection;
+};
 
 function Review(args = {}) {
   let _id      = 'id' + (new Date()).getTime();
@@ -220,23 +268,23 @@ function Review(args = {}) {
   let _comment = args.comment || '';
   let _rating  = args.rating ? new Rating(args.rating) : new Rating;
 
-  Object.defineProperty(AbstractProduct.prototype, 'id', {
+  Object.defineProperty(this, 'id', {
     get: () => { return _id }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'author', {
+  Object.defineProperty(this, 'author', {
     get: () => { return _author; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'date', {
+  Object.defineProperty(this, 'date', {
     get: () => { return _date; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'comment', {
+  Object.defineProperty(this, 'comment', {
     get: () => { return _comment; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'rating', {
+  Object.defineProperty(this, 'rating', {
     get: () => { return _rating; }
   });
 }
@@ -247,19 +295,19 @@ function Rating(args = {}) {
    let _price   = +args.price   || 0;
    let _quality = +args.quality || 0;
 
-   Object.defineProperty(AbstractProduct.prototype, 'value', {
+   Object.defineProperty(this, 'value', {
     get: () => { return _value }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'service', {
+  Object.defineProperty(this, 'service', {
     get: () => { return _service; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'price', {
+  Object.defineProperty(this, 'price', {
     get: () => { return _price; }
   });
 
-  Object.defineProperty(AbstractProduct.prototype, 'quality', {
+  Object.defineProperty(this, 'quality', {
     get: () => { return _quality; }
   });
 }
@@ -276,11 +324,11 @@ function Electronics(args = {}) {
       }
   }
 
-  Object.defineProperty(Clothers.prototype, 'warranty', {
+  Object.defineProperty(this, 'warranty', {
     get: () => { return _warranty; }
   });
 
-  Object.defineProperty(Clothers.prototype, 'power', {
+  Object.defineProperty(this, 'power', {
     get: () => { return _power; }
   });
 }
@@ -294,19 +342,19 @@ Electronics.prototype.resourceFields = function() {
 
 const validator = {
   validateEmail(email) {
-    const validateEmailFormat = (email) => { return /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email) };
+    const validateEmailFormat = email => { return /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email) };
 
     return isString(email) ? validateEmailFormat(email) : false
   },
 
   validatePhone(phone) {
-    const validatePhoneFormat = (phone) => { return /^(\+[\d]{2})?(([\s-]*)(\()?([\s-]*)(\d)([\s-]*)(\d)([\s-]*)(\d)(\))?)(([\s-]*[\d][\s-]*){7})$/.test(phone) };
+    const validatePhoneFormat = phone => { return /^(\+[\d]{2})?(([\s-]*)(\()?([\s-]*)(\d)([\s-]*)(\d)([\s-]*)(\d)(\))?)(([\s-]*[\d][\s-]*){7})$/.test(phone) };
 
     return isString(phone) ? validatePhoneFormat(phone) : false
   },
 
   validatePassword(pass) {
-    const validatePasswordFormat = (pass) => { return /^(?=.*\d)(?=.*[!@#\$%\^&\*_-])(?=.*\w)[\d\w\s]{8,24}$/.test(pass) };
+    const validatePasswordFormat = pass => { return /^(?=.*\d)(?=.*[!@#\$%\^&\*_-])(?=.*\w)[\d\w\s]{8,24}$/.test(pass) };
 
     return isString(pass) ? validatePasswordFormat(pass) : false
   }
@@ -329,15 +377,11 @@ function Clothers(args = {}) {
   let _sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   let _activeSize  = validatesSize(args.activeSize) || 'undefined size';
 
-  Object.defineProperty(Clothers.prototype, 'sizes', {
+  Object.defineProperty(this, 'sizes', {
     get: () => { return _sizes; }
   });
 
-  Object.defineProperty(Clothers.prototype, 'material', {
-    get: () => { return _material; }
-  });
-
-  Object.defineProperty(Clothers.prototype, 'activeSize', {
+  Object.defineProperty(this, 'activeSize', {
     get: () => { return _activeSize; },
 
     set: function(size) {
@@ -345,13 +389,13 @@ function Clothers(args = {}) {
     }
   });
 
-  Object.defineProperty(Clothers.prototype, 'color', {
+  Object.defineProperty(this, 'color', {
     get: () => { return _color; },
 
     set: (color) => { _color = color; }
   });
 
-  Object.defineProperty(Clothers.prototype, 'material', {
+  Object.defineProperty(this, 'material', {
     get: () => { return _material; },
 
     set: (material) => { _material = material; }
