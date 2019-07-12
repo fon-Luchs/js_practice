@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 
 <html>
- <head>
- <title>Page Title</title>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
- <link rel="stylesheet" type="text/css" href="style.css">
- </head>
- <body>
+  <head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
 
-   <nav class="navbar has-background-warning" role="navigation" aria-label="main navigation">
-     <div class="navbar-brand">
-       <a class="navbar-item">
-         <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
-       </a>
-   
-       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-         <span aria-hidden="true"></span>
-         <span aria-hidden="true"></span>
-         <span aria-hidden="true"></span>
-       </a>
-     </div>
-   </nav>
+    <nav class="navbar has-background-warning" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item">
+          <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
+        </a>
+    
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    </nav>
 
   <div class='main' id='main'>
   </div>
@@ -41,23 +41,23 @@
   <script src="./js/products.js"></script>
   <script>
 
-   let tst = new Clothers({
+  let tst = new Clothers({
     name: 'Dark matter',
     description: 'Dark matter is a form of matter that is thought to account for approximately 85% of the matter in the universe and about a quarter of its total energy density. The majority of dark matter is thought to be non-baryonic in nature, possibly being composed of some as-yet undiscovered subatomic particles.',
     price: 1200000000000
-   });
+  });
 
-   let tst_2 = new Clothers({
+  let tst_2 = new Clothers({
     name: 'SCP-1555',
     description: 'SCP-1555 is a facility of unknown origin and purpose installed in tunnels beneath an unnamed mountain peak in ████████ National Park. ',
     price: 11000000
-   });
+  });
 
-   let mainEl = tst.getProductTileHTML();
-   let next_item = tst_2.getProductTileHTML();
-   let main = document.getElementById('main');
-   main.appendChild(mainEl);
-   main.appendChild(next_item);
+  let mainEl = tst.getProductTileHTML();
+  let next_item = tst_2.getProductTileHTML();
+  let main = document.getElementById('main');
+  main.appendChild(mainEl);
+  main.appendChild(next_item);
   </script>
- </body>
+  </body>
 </html>

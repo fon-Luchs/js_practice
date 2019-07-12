@@ -136,11 +136,11 @@ AbstractProduct.sortByDesc = function(sorted_array, key) {
   return sortByAsc(sorted_array, key).reverse();
 };
 
-AbstractProduct.createProductTileHTML = function() {}
+AbstractProduct.createProductTileHTML = function() {};
 
 AbstractProduct.prototype.getPriceForQuantiry = function(count) {
   return '$' + this.price * +count;
-}
+};
 
 AbstractProduct.prototype.getFullInformation = function() {
   return  'ID> '          + this.id   + '\n' +
@@ -184,7 +184,7 @@ AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type
   });
 
   return sum === 0 ? sum : (sum / array.length).toFixed(2);
-}
+};
 
 AbstractProduct.prototype.getImage = function(image_index = 0) {
   if(image_index > this.images.length || image_index < 0) {
@@ -287,15 +287,15 @@ function Review(args = {}) {
   Object.defineProperty(this, 'rating', {
     get: () => { return _rating; }
   });
-}
+};
 
 function Rating(args = {}) {
-   let _value   = +args.value   || 0;
-   let _service = +args.service || 0;
-   let _price   = +args.price   || 0;
-   let _quality = +args.quality || 0;
+  let _value   = +args.value   || 0;
+  let _service = +args.service || 0;
+  let _price   = +args.price   || 0;
+  let _quality = +args.quality || 0;
 
-   Object.defineProperty(this, 'value', {
+  Object.defineProperty(this, 'value', {
     get: () => { return _value }
   });
 
@@ -310,7 +310,7 @@ function Rating(args = {}) {
   Object.defineProperty(this, 'quality', {
     get: () => { return _quality; }
   });
-}
+};
 
 function Electronics(args = {}) {
   AbstractProduct.apply(this, arguments);
@@ -331,16 +331,16 @@ function Electronics(args = {}) {
   Object.defineProperty(this, 'power', {
     get: () => { return _power; }
   });
-}
+};
 
 _extend(Electronics, AbstractProduct);
 
 Electronics.prototype.resourceFields = function() {
   return 'WARRANTY> ' + this.warranty + '-' + '\n' +
          'POWER> '    + this.power    + '-' + '\n'
-}
+};
 
-const validator = {
+const Validator = {
   validateEmail(email) {
     const validateEmailFormat = email => { return /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email) };
 
@@ -358,7 +358,7 @@ const validator = {
 
     return isString(pass) ? validatePasswordFormat(pass) : false
   }
-}
+};
 
 function Clothers(args = {}) {
   AbstractProduct.apply(this, arguments);
@@ -400,7 +400,7 @@ function Clothers(args = {}) {
 
     set: (material) => { _material = material; }
   });
-}
+};
 
 _extend(Clothers, AbstractProduct);
 
@@ -449,4 +449,4 @@ function _extend(subClass, superClass) {
 
 function isString(value) {
   return typeof value === 'string' || value instanceof String;
-}
+};
