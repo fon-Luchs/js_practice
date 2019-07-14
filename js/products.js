@@ -216,49 +216,67 @@ AbstractProduct.prototype.attrAccessor = function(args) {
 
 AbstractProduct.prototype.getProductTileHTML = function() {
   
-  let mainSection = document.createElement('section')
-  let divPriceBox = document.createElement('div');
-  let spanRegularPrice = document.createElement('span');
-  let spanPrice = document.createElement('span');
-  let productName = document.createElement('h3');
-  let productArchor = document.createElement('a');
-  let classHolder = document.createElement('div');
+  let mainDiv = document.createElement('div');
+  let cardDiv = document.createElement('div');
+  let productImage = dicumment.createElement('img');
+  let cardBody = document.createElement('div');
+  let productTitle = document.createElement('h5');
+  let productDescription = document.createElement('p');
   let quickviewArchor = document.createElement('a');
-  let heroBody = document.createElement('div');
-  let container = document.createElement('div');
-  let subtitle = document.createElement('div');
 
-  mainSection.className = 'product-main-div hero is-medium is-primary is-bold';
-  heroBody.className = 'hero-body';
-  container.className = 'container';
-  productName.className = 'product-name title';
-  productArchor.href    = '#';
-  divPriceBox.className = 'price-box';
-  spanRegularPrice.className = 'regular-price';
-  spanPrice.className        = 'price';
-  classHolder.className = 'holder';
-  quickviewArchor.className = 'quickview';
-  quickviewArchor.rel = 'nofollow';
+  mainDiv.className = 'col-sm-4 product';
+  cardDiv.className = 'card';
+  cardDiv.style = 'width: 18rem';
+  productImage.src = this.images[0];
+  productImage.className = 'card-img-top';
+  cardBody.className = 'card-body';
+  productTitle.className = 'card-title';
+  productDescription.className = 'card-text';
   quickviewArchor.href = '#';
-  subtitle.className = 'subtitle';
+  quickviewArchor.className = 'btn btn-primary'
 
-  spanPrice.innerText     = '$' + this.price;
-  productArchor.innerHTML = this.name;
-  subtitle.innerHTML = this.description;
-  quickviewArchor.innerHTML = 'Quickview';
+  // let divPriceBox = document.createElement('div');
+  // let spanRegularPrice = document.createElement('span');
+  // let spanPrice = document.createElement('span');
+  // let productName = document.createElement('h3');
+  // let productArchor = document.createElement('a');
+  // let classHolder = document.createElement('div');
+  // let quickviewArchor = document.createElement('a');
+  // let heroBody = document.createElement('div');
+  // let container = document.createElement('div');
+  // let subtitle = document.createElement('div');
 
-  mainSection.appendChild(heroBody);
-  heroBody.appendChild(container);
-  container.appendChild(productName);
-  productName.appendChild(productArchor);
-  container.appendChild(subtitle);
-  container.appendChild(divPriceBox);
-  divPriceBox.appendChild(spanRegularPrice);
-  spanRegularPrice.appendChild(spanPrice);
-  container.appendChild(classHolder);
-  classHolder.appendChild(quickviewArchor);
+  // mainSection.className = 'product-main-div hero is-medium is-primary is-bold';
+  // heroBody.className = 'hero-body';
+  // container.className = 'container';
+  // productName.className = 'product-name title';
+  // productArchor.href    = '#';
+  // divPriceBox.className = 'price-box';
+  // spanRegularPrice.className = 'regular-price';
+  // spanPrice.className        = 'price';
+  // classHolder.className = 'holder';
+  // quickviewArchor.className = 'quickview';
+  // quickviewArchor.rel = 'nofollow';
+  // quickviewArchor.href = '#';
+  // subtitle.className = 'subtitle';
 
-  return mainSection;
+  // spanPrice.innerText     = '$' + this.price;
+  // productArchor.innerHTML = this.name;
+  // subtitle.innerHTML = this.description;
+  // quickviewArchor.innerHTML = 'Quickview';
+
+  // mainSection.appendChild(heroBody);
+  // heroBody.appendChild(container);
+  // container.appendChild(productName);
+  // productName.appendChild(productArchor);
+  // container.appendChild(subtitle);
+  // container.appendChild(divPriceBox);
+  // divPriceBox.appendChild(spanRegularPrice);
+  // spanRegularPrice.appendChild(spanPrice);
+  // container.appendChild(classHolder);
+  // classHolder.appendChild(quickviewArchor);
+
+  // return mainSection;
 };
 
 function Review(args = {}) {

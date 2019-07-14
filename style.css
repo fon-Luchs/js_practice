@@ -1,7 +1,11 @@
 .main {
- min-height: 800px;
+  min-height: 800px;
 }
 
 .product-main-div {
- min-height: 150px;
+  min-height: 150px;
+}
+
+.product {
+  margin-top: 15px; 
 }
