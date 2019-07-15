@@ -12,8 +12,7 @@ http.createServer(function(request, response){
   let parts = url.parse(request.url); 
   if (parts.pathname === '/products') { 
     let content = fs.readFileSync('../product-feed.json')
-    let jsonContent = JSON.parse(content);
     response.writeHead(200, headers);
-    response.end(JSON.stringify(jsonContent, null, 3));
+    response.end(content);
   }
 }).listen(3000);

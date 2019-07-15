@@ -13,45 +13,9 @@
   </nav>
     
   <div class='main' id='main'>
-    <!--Carusel images-->
-    <!--Carusel images-->
-
-    <!--Content-->
       <div class="container">
-        <div class="row">
-          <div class="col-sm-4 product">
-              <div class="card" style="width: 18rem;">
-                <img src="http://scp-ru.wdfiles.com/local--files/scp-2055/chairs.PNG" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-          </div>
-          <div class="col-sm-4 product">
-              <div class="card" style="width: 18rem;">
-                <img src="http://scp-ru.wdfiles.com/local--files/scp-2055/chairs.PNG" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-          </div>
-          <div class="col-sm-4 product">
-              <div class="card" style="width: 18rem;">
-                <img src="http://scp-ru.wdfiles.com/local--files/scp-2055/chairs.PNG" class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-          </div>
-        </div>
+        <div class="row" id="line-items"></div>
       </div>
-    <!--Content-->
   </div>
 
   <!--footer-->
@@ -67,10 +31,22 @@
       </div>
     </div>
   <!--footer-->
-
+  
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
+  </script>
   <script src="./js/products.js"></script>
   <script>
-    console.info('Worked!')
+    async function getData() {
+      const data = await plp.getProductsJSONData();
+      let clothers = [];
+      data.forEach(paramsObject => clothers.push(new Clothers(paramsObject)) );
+      let lineItems = document.getElementById('line-items');
+      const HTMLdata = plp.renderProducts(clothers, lineItems);
+      return clothers;
+    }
+
+    getData();
   </script>
   </body>
 </html>
