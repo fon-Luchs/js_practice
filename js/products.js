@@ -36,6 +36,13 @@ function AbstractProduct(args = {}) {
 
     set: id => _id = id 
   });
+  // Object.defineProperties(this,{
+  //   id: {
+  //     get: () => _id,
+  //     set: (value) => _id = value
+  //   },
+  //   name:
+  // })
   
   Object.defineProperty(this, 'name', {
     get: () => { return _name; }, 
@@ -125,8 +132,12 @@ AbstractProduct.sortProducts = function(products_array = [], key = '', order = '
 
 AbstractProduct.sortByAsc = function(sorted_array, key) {
   return sorted_array.sort(function(a, b){
-    if (a[key] > b[key]) return 1;
-    if (a[key] < b[key]) return -1;
+    if (a[key] > b[key]){
+      return 1;
+    } else if (a[key] < b[key]){
+      return -1; 
+    }
+    return 0;
   });
 };
 
@@ -187,6 +198,8 @@ AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type
 
   return sum === 0 ? sum : (sum / array.length).toFixed(2);
 };
+
+console.log([1,2,3,45,5].reduce((s,i)=> i+s,0));
 
 AbstractProduct.prototype.getImage = function(image_index = 0) {
   if(image_index > this.images.length || image_index < 0) {
@@ -343,7 +356,7 @@ Electronics.prototype.resourceFields = function() {
 
 const Validator = {
   validateEmail(email) {
-    const validateEmailFormat = email => { return /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email) };
+    const validateEmailFormat = email => /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email)
 
     return isString(email) ? validateEmailFormat(email) : false
   },
