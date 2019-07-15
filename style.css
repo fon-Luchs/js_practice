@@ -9,3 +9,11 @@
 .product {
   margin-top: 15px; 
 }
+
+.nav-select {
+  border-radius: 20px 0px 0px 20px;
+}
+
+.nav-search-input {
+  border-radius: 0px 20px 20px 0px;
+}
