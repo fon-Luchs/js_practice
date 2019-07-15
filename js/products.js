@@ -36,13 +36,6 @@ function AbstractProduct(args = {}) {
 
     set: id => _id = id 
   });
-  // Object.defineProperties(this,{
-  //   id: {
-  //     get: () => _id,
-  //     set: (value) => _id = value
-  //   },
-  //   name:
-  // })
   
   Object.defineProperty(this, 'name', {
     get: () => { return _name; }, 
@@ -198,8 +191,6 @@ AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type
 
   return sum === 0 ? sum : (sum / array.length).toFixed(2);
 };
-
-console.log([1,2,3,45,5].reduce((s,i)=> i+s,0));
 
 AbstractProduct.prototype.getImage = function(image_index = 0) {
   if(image_index > this.images.length || image_index < 0) {

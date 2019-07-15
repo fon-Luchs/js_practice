@@ -8,9 +8,13 @@
   </head>
   <body>
   
-  <nav class="navbar navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
-  </nav>
+      <nav class="navbar navbar-dark bg-dark">
+          <a class="navbar-brand">Navbar</a>
+          <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id= "search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search-button">Search</button>
+          </form>
+        </nav>
     
   <div class='main' id='main'>
       <div class="container">
@@ -40,9 +44,39 @@
     async function getData() {
       const data = await plp.getProductsJSONData();
       let clothers = [];
+
       data.forEach(paramsObject => clothers.push(new Clothers(paramsObject)) );
+
+      let serchInput = document.getElementById('search');
       let lineItems = document.getElementById('line-items');
-      const HTMLdata = plp.renderProducts(clothers, lineItems);
+      let searchButton = document.getElementById('search-button');
+      
+      plp.renderProducts(clothers, lineItems);
+
+      serchInput.addEventListener('keydown', event => {
+        if(event.key === 'Enter' || event.key === 13 ){
+          if(serchInput.value === ''){
+            while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
+            plp.renderProducts(clothers, lineItems);
+          } else {
+            let searchedClothers = Clothers.searchProduct(clothers, serchInput.value)
+            while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
+            plp.renderProducts(searchedClothers, lineItems);
+          }
+        }
+      })
+      
+      searchButton.addEventListener('click', () => { 
+        if(serchInput.value === ''){
+          while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
+          plp.renderProducts(clothers, lineItems);
+        } else {
+          let searchedClothers = Clothers.searchProduct(clothers, serchInput.value)
+          while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
+          plp.renderProducts(searchedClothers, lineItems);
+        }
+      });
+    
       return clothers;
     }
 
