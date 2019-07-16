@@ -12,14 +12,13 @@
           <a class="navbar-brand">Navbar</a>
           <form class="form-inline">
               <select class="custom-select nav-select" id='select'>
-                  <option selected></option>
                   <option value="price asc">Low to High</option>
                   <option value="price desc">High to Low</option>
-                  <option value="title asc">A-Z</option>
-                  <option value="title desc">Z-A</option>
+                  <option value="name asc">A-Z</option>
+                  <option value="name desc">Z-A</option>
                 </select>
             <input class="form-control nav-search-input mr-sm-2" type="search" placeholder="Search" aria-label="Search" id= "search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="search-button">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-button">Search</button>
           </form>
         </nav>
     
@@ -49,52 +48,5 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="./js/products.js"></script>
-  <script>
-    async function getData() {
-      const data = await plp.getProductsJSONData();
-      let clothers = [];
-
-      data.forEach(paramsObject => clothers.push(new Clothers(paramsObject)) );
-
-      let serchInput = document.getElementById('search');
-      let lineItems = document.getElementById('line-items');
-      let searchButton = document.getElementById('search-button');
-      let selectItem = document.getElementById('select')
-
-      plp.renderProducts(clothers, lineItems);
-
-      serchInput.addEventListener('keydown', event => {
-        if(event.key === 'Enter' || event.key === 13 ){
-          if(serchInput.value === ''){
-            while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
-            plp.renderProducts(clothers, lineItems);
-          } else {
-            let searchedClothers = Clothers.searchProduct(clothers, serchInput.value)
-            while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
-            plp.renderProducts(searchedClothers, lineItems);
-          }
-        }
-      })
-      
-      searchButton.addEventListener('click', () => { 
-        if(serchInput.value === ''){
-          while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
-          plp.renderProducts(clothers, lineItems);
-        } else {
-          let searchedClothers = Clothers.searchProduct(clothers, serchInput.value)
-          while (lineItems.firstChild) { lineItems.removeChild(lineItems.firstChild); }
-          plp.renderProducts(searchedClothers, lineItems);
-        }
-      });
-      
-      selectItem.addEventListener('change', () => {
-        
-      });
-
-      return clothers;
-    }
-
-    getData();
-  </script>
   </body>
 </html>

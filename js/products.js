@@ -135,7 +135,7 @@ AbstractProduct.sortByAsc = function(sorted_array, key) {
 };
 
 AbstractProduct.sortByDesc = function(sorted_array, key) {
-  return sortByAsc(sorted_array, key).reverse();
+  return AbstractProduct.sortByAsc(sorted_array, key).reverse();
 };
 
 AbstractProduct.id = () => { 
@@ -477,3 +477,45 @@ const plp = (function(my) {
 
   return my;
 }({}));
+
+let render = (arrayProducts, element, sortValue) => {
+  let sortedArray;
+  if (sortValue) {
+    let sortArgs = sortValue.split(" ");
+    sortedArray = Clothers.sortProducts(arrayProducts, sortArgs[0], sortArgs[1])
+  }
+  while (element.firstChild) { element.removeChild(element.firstChild); }
+  plp.renderProducts(sortedArray || arrayProducts, element);
+}
+async function getData() {
+  const data = await plp.getProductsJSONData();
+  let clothers = [];
+
+  data.forEach(paramsObject => clothers.push(new Clothers(paramsObject)) );
+
+  let searchInput = document.getElementById('search');
+  let lineItems = document.getElementById('line-items');
+  let searchButton = document.getElementById('search-button');
+  let selectItem = document.getElementById('select')
+  let selectValue = 'name desc';
+  
+  plp.renderProducts(clothers, lineItems);
+
+  let searchInputHelper = () => {
+    if (searchInput.value === '') {
+      render(clothers, lineItems, selectValue)
+    } else {
+      render(Clothers.searchProduct(clothers, searchInput.value), lineItems, selectValue);
+    }
+  }
+
+  selectItem.addEventListener('change', () => { selectValue = selectItem.value; });
+
+  searchInput.addEventListener('keydown', event => { if(event.key === 'Enter' || event.key === 13 ) searchInputHelper() });
+  
+  searchButton.addEventListener('click', () => searchInputHelper());
+
+  return clothers;
+}
+
+getData();
