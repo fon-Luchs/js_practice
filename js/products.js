@@ -3,13 +3,13 @@ function AbstractProduct(args = {}) {
       throw new Error('Cannot instantiate abstractclass');
   }
 
-  let _id          = (new Date()).getTime();
+  let _id          = args.ID || AbstractProduct.id;
   let _name        = args.name        || 'empty';
   let _description = args.description || ' ';
   let _price       = +args.price      || 0.0;
   let _images      = validatesImagesArray(args.images);
   let _brand       = args.brand || 'empty';
-  let _quantity    = AbstractProduct.quantity;
+  let _quantity    = args.quantity || 0;
   let _reviews     = [];
   let _date        = args.date || new Date;
   
@@ -32,7 +32,9 @@ function AbstractProduct(args = {}) {
   }
 
   Object.defineProperty(this, 'id', {
-    get: () => { return _id }
+    get: () => { return _id },
+
+    set: id => _id = id 
   });
   
   Object.defineProperty(this, 'name', {
@@ -53,9 +55,7 @@ function AbstractProduct(args = {}) {
     set: (price) => { if(!isString(price)) _price = price; }
   });
 
-  Object.defineProperty(this, 'images', {
-    get: () => { return _images; }
-  });
+  Object.defineProperty(this, 'images', { get: () => { return _images; } });
 
   Object.defineProperty(this, 'brand', {
     get: () => { return _brand; },
@@ -70,19 +70,13 @@ function AbstractProduct(args = {}) {
   });
   
   Object.defineProperty(this, 'quantity', {
-    get: () => { return _quantity }
+    get: () => { return _quantity },
+
+    set: () => quantity => _quantity = quantity
   });
 
-  Object.defineProperty(this, 'reviews', {
-    get: () => { return _reviews }
-  });
+  Object.defineProperty(this, 'reviews', { get: () => { return _reviews } });
 };
-
-if (AbstractProduct.quantity === undefined){
-    AbstractProduct.quantity = 0;
-} else {
-    if(AbstractProduct.quantity > 0) AbstractProduct.count--;
-}
 
 AbstractProduct.defaultImages = [
   'http://scp-ru.wdfiles.com/local--files/scp-603/603.png',
@@ -98,15 +92,8 @@ AbstractProduct.sortProducts = function(products_array = [], key = '', order = '
   return 'invalid key';
 };
 
-AbstractProduct.sortCurrentProductsArray = function(products_array = [], key = '') {
-  if (key === 'price' || key === 'name' || key === 'id') {
-      return products_array;
-  }
-};
-
 AbstractProduct.searchProduct = function(products_array = [], string = '') {
-  let mathces =  products_array.filter(item => (item.name.indexOf(string) !== -1) || item.description.indexOf(string) !== -1);
-  return mathces;
+  return products_array.filter(item => (item.name.indexOf(string) !== -1) || item.description.indexOf(string) !== -1);
 };
 
 AbstractProduct.sortProducts = function(products_array = [], key = '', order = '') {
@@ -128,23 +115,24 @@ AbstractProduct.sortProducts = function(products_array = [], key = '', order = '
 AbstractProduct.sortByAsc = function(sorted_array, key) {
   return sorted_array.sort(function(a, b){
     if (a[key] > b[key]) return 1;
-    if (a[key] < b[key]) return -1;
+    if (a[key] < b[key]) return -1; 
+    return 0;
   });
 };
 
-AbstractProduct.sortByDesc = function(sorted_array, key) {
-  return sortByAsc(sorted_array, key).reverse();
-};
+AbstractProduct.sortByDesc = (sorted_array, key) => AbstractProduct.sortByAsc(sorted_array, key).reverse();
 
-AbstractProduct.createProductTileHTML = function() {}
-
-AbstractProduct.prototype.getPriceForQuantiry = function(count) {
-  return '$' + this.price * +count;
+AbstractProduct.id = () => { 
+  if(AbstractProduct.id === undefined) { AbstractProduct.id = 0 };
+  AbstractProduct.id++;
+  return AbstractProduct.id;
 }
 
+AbstractProduct.prototype.getPriceForQuantiry = (count = 1) => '$' + this.price * +count;
+
 AbstractProduct.prototype.getFullInformation = function() {
-  return  'ID> '          + this.id   + '\n' +
-          'NAME> '        + this.name + '\n' +
+  return  'ID> '          + this.id          + '\n' +
+          'NAME> '        + this.name        + '\n' +
           'DESCRIPTION> ' + this.description + '\n' +
           'PRICE> '       + this.price       + '\n' +
           'IMAGES> '      + this.images      + '\n' +
@@ -160,11 +148,7 @@ AbstractProduct.prototype.addReview = function(args = {}){
 };
 
 AbstractProduct.prototype.deleteReview = function(review_id) {
-  this.reviews.forEach(function(review, i) {
-      if(review.id === review_id){
-          this.reviews.splice(i, 1);
-      }
-  });
+  this.reviews.forEach((review, i) => { if(review.id === review_id) this.reviews.splice(i, 1) });
 };
 
 AbstractProduct.prototype.getAverageRating = function() {
@@ -184,14 +168,10 @@ AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type
   });
 
   return sum === 0 ? sum : (sum / array.length).toFixed(2);
-}
+};
 
 AbstractProduct.prototype.getImage = function(image_index = 0) {
-  if(image_index > this.images.length || image_index < 0) {
-      return this.images[0];
-  }
-
-  return this.images[image_index];
+  return (image_index > this.images.length || image_index < 0) ? this.images[0] : this.images[image_index];
 };
 
 AbstractProduct.prototype.getReviewById = function(id) {
@@ -216,49 +196,48 @@ AbstractProduct.prototype.attrAccessor = function(args) {
 
 AbstractProduct.prototype.getProductTileHTML = function() {
   
-  let mainSection = document.createElement('section')
-  let divPriceBox = document.createElement('div');
-  let spanRegularPrice = document.createElement('span');
-  let spanPrice = document.createElement('span');
-  let productName = document.createElement('h3');
-  let productArchor = document.createElement('a');
-  let classHolder = document.createElement('div');
+  let mainDiv = document.createElement('div');
+  let cardDiv = document.createElement('div');
+  let productImage = document.createElement('img');
+  let cardBody = document.createElement('div');
+  let productTitle = document.createElement('h5');
+  let productDescription = document.createElement('p');
+  let priceDiv = document.createElement('div');
   let quickviewArchor = document.createElement('a');
-  let heroBody = document.createElement('div');
-  let container = document.createElement('div');
-  let subtitle = document.createElement('div');
+  let containerWrapper = document.createElement('div');
+  let rowWrapper = document.createElement('div');
 
-  mainSection.className = 'product-main-div hero is-medium is-primary is-bold';
-  heroBody.className = 'hero-body';
-  container.className = 'container';
-  productName.className = 'product-name title';
-  productArchor.href    = '#';
-  divPriceBox.className = 'price-box';
-  spanRegularPrice.className = 'regular-price';
-  spanPrice.className        = 'price';
-  classHolder.className = 'holder';
-  quickviewArchor.className = 'quickview';
-  quickviewArchor.rel = 'nofollow';
+  mainDiv.className = 'col-sm-4 product';
+  cardDiv.className = 'card';
+  cardDiv.style = 'width: 18rem';
+  productImage.src = this.images[0];
+  productImage.className = 'card-img-top';
+  cardBody.className = 'card-body';
+  productTitle.className = 'card-title';
+  productDescription.className = 'card-text';
   quickviewArchor.href = '#';
-  subtitle.className = 'subtitle';
+  quickviewArchor.className = 'btn btn-primary col-sm-6'
+  priceDiv.className = 'price col-sm-6'
+  containerWrapper.className = 'container';
+  rowWrapper.className = 'row'
 
-  spanPrice.innerText     = '$' + this.price;
-  productArchor.innerHTML = this.name;
-  subtitle.innerHTML = this.description;
-  quickviewArchor.innerHTML = 'Quickview';
+  productTitle.innerText = this.name;
+  productDescription.innerText = this.description;
+  quickviewArchor.innerText = 'Quickview';
+  priceDiv.innerText = this.getPriceForQuantiry();
 
-  mainSection.appendChild(heroBody);
-  heroBody.appendChild(container);
-  container.appendChild(productName);
-  productName.appendChild(productArchor);
-  container.appendChild(subtitle);
-  container.appendChild(divPriceBox);
-  divPriceBox.appendChild(spanRegularPrice);
-  spanRegularPrice.appendChild(spanPrice);
-  container.appendChild(classHolder);
-  classHolder.appendChild(quickviewArchor);
+  mainDiv.appendChild(cardDiv);
+  cardDiv.appendChild(productImage);
+  cardDiv.appendChild(cardBody);
+  cardBody.appendChild(productTitle);
+  cardBody.appendChild(productDescription);
+  cardBody.appendChild(containerWrapper);
+  containerWrapper.appendChild(rowWrapper);
+  rowWrapper.appendChild(quickviewArchor);
+  rowWrapper.appendChild(priceDiv);
 
-  return mainSection;
+
+  return mainDiv;
 };
 
 function Review(args = {}) {
@@ -268,49 +247,31 @@ function Review(args = {}) {
   let _comment = args.comment || '';
   let _rating  = args.rating ? new Rating(args.rating) : new Rating;
 
-  Object.defineProperty(this, 'id', {
-    get: () => { return _id }
-  });
+  Object.defineProperty(this, 'id',      { get: () => { return _id } });
 
-  Object.defineProperty(this, 'author', {
-    get: () => { return _author; }
-  });
+  Object.defineProperty(this, 'author',  { get: () => { return _author; } });
 
-  Object.defineProperty(this, 'date', {
-    get: () => { return _date; }
-  });
+  Object.defineProperty(this, 'date',    { get: () => { return _date; } });
 
-  Object.defineProperty(this, 'comment', {
-    get: () => { return _comment; }
-  });
+  Object.defineProperty(this, 'comment', { get: () => { return _comment; } });
 
-  Object.defineProperty(this, 'rating', {
-    get: () => { return _rating; }
-  });
-}
+  Object.defineProperty(this, 'rating',  { get: () => { return _rating; } });
+};
 
 function Rating(args = {}) {
-   let _value   = +args.value   || 0;
-   let _service = +args.service || 0;
-   let _price   = +args.price   || 0;
-   let _quality = +args.quality || 0;
+  let _value   = +args.value   || 0;
+  let _service = +args.service || 0;
+  let _price   = +args.price   || 0;
+  let _quality = +args.quality || 0;
 
-   Object.defineProperty(this, 'value', {
-    get: () => { return _value }
-  });
+  Object.defineProperty(this, 'value',   { get: () => { return _value } });
 
-  Object.defineProperty(this, 'service', {
-    get: () => { return _service; }
-  });
+  Object.defineProperty(this, 'service', { get: () => { return _service; } });
 
-  Object.defineProperty(this, 'price', {
-    get: () => { return _price; }
-  });
+  Object.defineProperty(this, 'price',   { get: () => { return _price; } });
 
-  Object.defineProperty(this, 'quality', {
-    get: () => { return _quality; }
-  });
-}
+  Object.defineProperty(this, 'quality', { get: () => { return _quality; } });
+};
 
 function Electronics(args = {}) {
   AbstractProduct.apply(this, arguments);
@@ -319,30 +280,24 @@ function Electronics(args = {}) {
   let _power    = args.power || 0;
 
   function validateWarranty(warranty) {
-      if(warranty) {
-          return (warranty < 0 || warranty === 0) ? false : warranty;
-      }
+      if(warranty) return (warranty < 0 || warranty === 0) ? false : warranty;
   }
 
-  Object.defineProperty(this, 'warranty', {
-    get: () => { return _warranty; }
-  });
+  Object.defineProperty(this, 'warranty', { get: () => { return _warranty; } });
 
-  Object.defineProperty(this, 'power', {
-    get: () => { return _power; }
-  });
-}
+  Object.defineProperty(this, 'power',    { get: () => { return _power; } });
+};
 
 _extend(Electronics, AbstractProduct);
 
 Electronics.prototype.resourceFields = function() {
-  return 'WARRANTY> ' + this.warranty + '-' + '\n' +
-         'POWER> '    + this.power    + '-' + '\n'
-}
+  return  'WARRANTY> ' + this.warranty + '-' + '\n' +
+          'POWER> '    + this.power    + '-' + '\n'
+};
 
-const validator = {
+const Validator = {
   validateEmail(email) {
-    const validateEmailFormat = email => { return /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email) };
+    const validateEmailFormat = email => /(^[A-Za-z\d]{1})([^@]{1,19})@([\w.!$%\&;’*+\/=?\^_-]{1,15})\.([A-Za-z]{1,5}$)/.test(email)
 
     return isString(email) ? validateEmailFormat(email) : false
   },
@@ -358,7 +313,7 @@ const validator = {
 
     return isString(pass) ? validatePasswordFormat(pass) : false
   }
-}
+};
 
 function Clothers(args = {}) {
   AbstractProduct.apply(this, arguments);
@@ -377,9 +332,7 @@ function Clothers(args = {}) {
   let _sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   let _activeSize  = validatesSize(args.activeSize) || 'undefined size';
 
-  Object.defineProperty(this, 'sizes', {
-    get: () => { return _sizes; }
-  });
+  Object.defineProperty(this, 'sizes', { get: () => { return _sizes; } });
 
   Object.defineProperty(this, 'activeSize', {
     get: () => { return _activeSize; },
@@ -400,14 +353,14 @@ function Clothers(args = {}) {
 
     set: (material) => { _material = material; }
   });
-}
+};
 
 _extend(Clothers, AbstractProduct);
 
 Clothers.prototype.resourceFields = function() {
-  return 'MATERIAL> ' + this.material +  '\n' +
-         'COLOR> '    + this.color    +  '\n' +
-         'ACTIVESIZE> ' + this.activeSize + '\n'
+  return  'MATERIAL> ' + this.material +  '\n' +
+          'COLOR> '    + this.color    +  '\n' +
+          'ACTIVESIZE> ' + this.activeSize + '\n'
 }
 
 Clothers.prototype.addSize = function(size) {
@@ -449,4 +402,69 @@ function _extend(subClass, superClass) {
 
 function isString(value) {
   return typeof value === 'string' || value instanceof String;
+};
+
+const plp = (function(my) {
+
+  const url = 'http://localhost:3000/products'
+
+  my.getProductsJSONData = async () => {
+    const response = await $.ajax(url);
+    const data = JSON.parse(response);
+
+    return data;
+  };
+
+  my.renderProducts = (clothersArray = [], parentElement) => { 
+      clothersArray.map(clother => { 
+        let el = clother.getProductTileHTML()
+        parentElement.appendChild(el);
+      });
+    return clothersArray;
+  }
+
+  return my;
+}({}));
+
+let render = (arrayProducts, element, sortValue) => {
+  let sortedArray;
+  if (sortValue) {
+    let sortArgs = sortValue.split(" ");
+    sortedArray = Clothers.sortProducts(arrayProducts, sortArgs[0], sortArgs[1])
+  }
+  while (element.firstChild) { element.removeChild(element.firstChild); }
+  plp.renderProducts(sortedArray || arrayProducts, element);
 }
+
+async function getData() {
+  const data = await plp.getProductsJSONData();
+  let clothers = [];
+
+  data.forEach(paramsObject => clothers.push(new Clothers(paramsObject)) );
+
+  let searchInput = document.getElementById('search');
+  let lineItems = document.getElementById('line-items');
+  let searchButton = document.getElementById('search-button');
+  let selectItem = document.getElementById('select')
+  let selectValue = 'name desc';
+
+  plp.renderProducts(clothers, lineItems);
+
+  let searchInputHelper = () => {
+    if (searchInput.value === '') {
+      render(clothers, lineItems, selectValue)
+    } else {
+      render(Clothers.searchProduct(clothers, searchInput.value), lineItems, selectValue);
+    }
+  }
+
+  selectItem.addEventListener('change', () => { selectValue = selectItem.value; });
+
+  searchInput.addEventListener('keydown', event => { if(event.key === 'Enter' || event.key === 13 ) searchInputHelper() });
+  
+  searchButton.addEventListener('click', () => searchInputHelper());
+
+  return clothers;
+}
+
+getData();

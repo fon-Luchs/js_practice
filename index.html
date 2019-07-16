@@ -1,63 +1,52 @@
 <!DOCTYPE html>
 
 <html>
- <head>
- <title>Page Title</title>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css">
- <link rel="stylesheet" type="text/css" href="style.css">
- </head>
- <body>
-
-   <nav class="navbar has-background-warning" role="navigation" aria-label="main navigation">
-     <div class="navbar-brand">
-       <a class="navbar-item">
-         <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
-       </a>
-   
-       <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-         <span aria-hidden="true"></span>
-         <span aria-hidden="true"></span>
-         <span aria-hidden="true"></span>
-       </a>
-     </div>
-   </nav>
-
+  <head>
+  <title>Page Title</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+  
+      <nav class="navbar navbar-dark bg-dark">
+          <a class="navbar-brand">Navbar</a>
+          <form class="form-inline">
+              <select class="custom-select nav-select" id='select'>
+                  <option value="price asc">Low to High</option>
+                  <option value="price desc">High to Low</option>
+                  <option value="name asc">A-Z</option>
+                  <option value="name desc">Z-A</option>
+                </select>
+            <input class="form-control nav-search-input mr-sm-2" type="search" placeholder="Search" aria-label="Search" id= "search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" id="search-button">Search</button>
+          </form>
+        </nav>
+    
   <div class='main' id='main'>
+      <div class="container">
+        <div class="row" id="line-items"></div>
+      </div>
   </div>
 
-  <footer class="footer has-background-white-ter">
-    <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-          Primary bold title
-        </h1>
-        <h2 class="subtitle">
-          Primary bold subtitle
-        </h2>
+  <!--footer-->
+  <div class="card  bg-dark">
+      <div class="card-header">
+        Quote
+      </div>
+      <div class="card-body">
+        <blockquote class="blockquote mb-0">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+          <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
+        </blockquote>
       </div>
     </div>
-  </footer>
-
-  <script src="./js/products.js"></script>
-  <script>
-
-   let tst = new Clothers({
-    name: 'Dark matter',
-    description: 'Dark matter is a form of matter that is thought to account for approximately 85% of the matter in the universe and about a quarter of its total energy density. The majority of dark matter is thought to be non-baryonic in nature, possibly being composed of some as-yet undiscovered subatomic particles.',
-    price: 1200000000000
-   });
-
-   let tst_2 = new Clothers({
-    name: 'SCP-1555',
-    description: 'SCP-1555 is a facility of unknown origin and purpose installed in tunnels beneath an unnamed mountain peak in ████████ National Park. ',
-    price: 11000000
-   });
-
-   let mainEl = tst.getProductTileHTML();
-   let next_item = tst_2.getProductTileHTML();
-   let main = document.getElementById('main');
-   main.appendChild(mainEl);
-   main.appendChild(next_item);
+  <!--footer-->
+  
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous">
   </script>
- </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="./js/products.js"></script>
+  </body>
 </html>
