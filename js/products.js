@@ -128,7 +128,7 @@ AbstractProduct.id = () => {
   return AbstractProduct.id;
 }
 
-AbstractProduct.prototype.getPriceForQuantiry = (count = 1) => this.price * +count ;
+AbstractProduct.prototype.getPriceForQuantiry = function(count = 1) { return '$' + this.price * +count } ;
 
 AbstractProduct.prototype.getFullInformation = function() {
   return  'ID> '          + this.id          + '\n' +
@@ -224,7 +224,7 @@ AbstractProduct.prototype.getProductTileHTML = function() {
   productTitle.innerText = this.name;
   productDescription.innerText = this.description;
   quickviewArchor.innerText = 'Quickview';
-  priceDiv.innerText = '$'+ this.price;
+  priceDiv.innerText = this.getPriceForQuantiry();
 
   mainDiv.appendChild(cardDiv);
   cardDiv.appendChild(productImage);
