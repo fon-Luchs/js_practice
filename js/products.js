@@ -55,9 +55,7 @@ function AbstractProduct(args = {}) {
     set: (price) => { if(!isString(price)) _price = price; }
   });
 
-  Object.defineProperty(this, 'images', {
-    get: () => { return _images; }
-  });
+  Object.defineProperty(this, 'images', { get: () => { return _images; } });
 
   Object.defineProperty(this, 'brand', {
     get: () => { return _brand; },
@@ -77,9 +75,7 @@ function AbstractProduct(args = {}) {
     set: () => quantity => _quantity = quantity
   });
 
-  Object.defineProperty(this, 'reviews', {
-    get: () => { return _reviews }
-  });
+  Object.defineProperty(this, 'reviews', { get: () => { return _reviews } });
 };
 
 AbstractProduct.defaultImages = [
@@ -96,15 +92,8 @@ AbstractProduct.sortProducts = function(products_array = [], key = '', order = '
   return 'invalid key';
 };
 
-AbstractProduct.sortCurrentProductsArray = function(products_array = [], key = '') {
-  if (key === 'price' || key === 'name' || key === 'id') {
-      return products_array;
-  }
-};
-
 AbstractProduct.searchProduct = function(products_array = [], string = '') {
-  let mathces =  products_array.filter(item => (item.name.indexOf(string) !== -1) || item.description.indexOf(string) !== -1);
-  return mathces;
+  return products_array.filter(item => (item.name.indexOf(string) !== -1) || item.description.indexOf(string) !== -1);
 };
 
 AbstractProduct.sortProducts = function(products_array = [], key = '', order = '') {
@@ -125,18 +114,13 @@ AbstractProduct.sortProducts = function(products_array = [], key = '', order = '
 
 AbstractProduct.sortByAsc = function(sorted_array, key) {
   return sorted_array.sort(function(a, b){
-    if (a[key] > b[key]){
-      return 1;
-    } else if (a[key] < b[key]){
-      return -1; 
-    }
+    if (a[key] > b[key]) return 1;
+    if (a[key] < b[key]) return -1; 
     return 0;
   });
 };
 
-AbstractProduct.sortByDesc = function(sorted_array, key) {
-  return AbstractProduct.sortByAsc(sorted_array, key).reverse();
-};
+AbstractProduct.sortByDesc = (sorted_array, key) => AbstractProduct.sortByAsc(sorted_array, key).reverse();
 
 AbstractProduct.id = () => { 
   if(AbstractProduct.id === undefined) { AbstractProduct.id = 0 };
@@ -144,9 +128,7 @@ AbstractProduct.id = () => {
   return AbstractProduct.id;
 }
 
-AbstractProduct.prototype.getPriceForQuantiry = function(count) {
-  return '$' + this.price * +count;
-};
+AbstractProduct.prototype.getPriceForQuantiry = (count = 1) => '$' + this.price * +count;
 
 AbstractProduct.prototype.getFullInformation = function() {
   return  'ID> '          + this.id          + '\n' +
@@ -166,11 +148,7 @@ AbstractProduct.prototype.addReview = function(args = {}){
 };
 
 AbstractProduct.prototype.deleteReview = function(review_id) {
-  this.reviews.forEach(function(review, i) {
-      if(review.id === review_id){
-          this.reviews.splice(i, 1);
-      }
-  });
+  this.reviews.forEach((review, i) => { if(review.id === review_id) this.reviews.splice(i, 1) });
 };
 
 AbstractProduct.prototype.getAverageRating = function() {
@@ -193,11 +171,7 @@ AbstractProduct.prototype.averageRatingsValue = function(array = [], rating_type
 };
 
 AbstractProduct.prototype.getImage = function(image_index = 0) {
-  if(image_index > this.images.length || image_index < 0) {
-      return this.images[0];
-  }
-
-  return this.images[image_index];
+  return (image_index > this.images.length || image_index < 0) ? this.images[0] : this.images[image_index];
 };
 
 AbstractProduct.prototype.getReviewById = function(id) {
@@ -250,7 +224,7 @@ AbstractProduct.prototype.getProductTileHTML = function() {
   productTitle.innerText = this.name;
   productDescription.innerText = this.description;
   quickviewArchor.innerText = 'Quickview';
-  priceDiv.innerText = '$' + this.price;
+  priceDiv.innerText = this.getPriceForQuantiry();
 
   mainDiv.appendChild(cardDiv);
   cardDiv.appendChild(productImage);
@@ -273,25 +247,15 @@ function Review(args = {}) {
   let _comment = args.comment || '';
   let _rating  = args.rating ? new Rating(args.rating) : new Rating;
 
-  Object.defineProperty(this, 'id', {
-    get: () => { return _id }
-  });
+  Object.defineProperty(this, 'id',      { get: () => { return _id } });
 
-  Object.defineProperty(this, 'author', {
-    get: () => { return _author; }
-  });
+  Object.defineProperty(this, 'author',  { get: () => { return _author; } });
 
-  Object.defineProperty(this, 'date', {
-    get: () => { return _date; }
-  });
+  Object.defineProperty(this, 'date',    { get: () => { return _date; } });
 
-  Object.defineProperty(this, 'comment', {
-    get: () => { return _comment; }
-  });
+  Object.defineProperty(this, 'comment', { get: () => { return _comment; } });
 
-  Object.defineProperty(this, 'rating', {
-    get: () => { return _rating; }
-  });
+  Object.defineProperty(this, 'rating',  { get: () => { return _rating; } });
 };
 
 function Rating(args = {}) {
@@ -300,21 +264,13 @@ function Rating(args = {}) {
   let _price   = +args.price   || 0;
   let _quality = +args.quality || 0;
 
-  Object.defineProperty(this, 'value', {
-    get: () => { return _value }
-  });
+  Object.defineProperty(this, 'value',   { get: () => { return _value } });
 
-  Object.defineProperty(this, 'service', {
-    get: () => { return _service; }
-  });
+  Object.defineProperty(this, 'service', { get: () => { return _service; } });
 
-  Object.defineProperty(this, 'price', {
-    get: () => { return _price; }
-  });
+  Object.defineProperty(this, 'price',   { get: () => { return _price; } });
 
-  Object.defineProperty(this, 'quality', {
-    get: () => { return _quality; }
-  });
+  Object.defineProperty(this, 'quality', { get: () => { return _quality; } });
 };
 
 function Electronics(args = {}) {
@@ -324,25 +280,19 @@ function Electronics(args = {}) {
   let _power    = args.power || 0;
 
   function validateWarranty(warranty) {
-      if(warranty) {
-          return (warranty < 0 || warranty === 0) ? false : warranty;
-      }
+      if(warranty) return (warranty < 0 || warranty === 0) ? false : warranty;
   }
 
-  Object.defineProperty(this, 'warranty', {
-    get: () => { return _warranty; }
-  });
+  Object.defineProperty(this, 'warranty', { get: () => { return _warranty; } });
 
-  Object.defineProperty(this, 'power', {
-    get: () => { return _power; }
-  });
+  Object.defineProperty(this, 'power',    { get: () => { return _power; } });
 };
 
 _extend(Electronics, AbstractProduct);
 
 Electronics.prototype.resourceFields = function() {
-  return 'WARRANTY> ' + this.warranty + '-' + '\n' +
-         'POWER> '    + this.power    + '-' + '\n'
+  return  'WARRANTY> ' + this.warranty + '-' + '\n' +
+          'POWER> '    + this.power    + '-' + '\n'
 };
 
 const Validator = {
@@ -382,9 +332,7 @@ function Clothers(args = {}) {
   let _sizes       = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
   let _activeSize  = validatesSize(args.activeSize) || 'undefined size';
 
-  Object.defineProperty(this, 'sizes', {
-    get: () => { return _sizes; }
-  });
+  Object.defineProperty(this, 'sizes', { get: () => { return _sizes; } });
 
   Object.defineProperty(this, 'activeSize', {
     get: () => { return _activeSize; },
@@ -410,9 +358,9 @@ function Clothers(args = {}) {
 _extend(Clothers, AbstractProduct);
 
 Clothers.prototype.resourceFields = function() {
-  return 'MATERIAL> ' + this.material +  '\n' +
-         'COLOR> '    + this.color    +  '\n' +
-         'ACTIVESIZE> ' + this.activeSize + '\n'
+  return  'MATERIAL> ' + this.material +  '\n' +
+          'COLOR> '    + this.color    +  '\n' +
+          'ACTIVESIZE> ' + this.activeSize + '\n'
 }
 
 Clothers.prototype.addSize = function(size) {
@@ -487,6 +435,7 @@ let render = (arrayProducts, element, sortValue) => {
   while (element.firstChild) { element.removeChild(element.firstChild); }
   plp.renderProducts(sortedArray || arrayProducts, element);
 }
+
 async function getData() {
   const data = await plp.getProductsJSONData();
   let clothers = [];
@@ -498,7 +447,7 @@ async function getData() {
   let searchButton = document.getElementById('search-button');
   let selectItem = document.getElementById('select')
   let selectValue = 'name desc';
-  
+
   plp.renderProducts(clothers, lineItems);
 
   let searchInputHelper = () => {
