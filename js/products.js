@@ -460,7 +460,7 @@ async function getData() {
 
   selectItem.addEventListener('change', () => { selectValue = selectItem.value; });
 
-  searchInput.addEventListener('keydown', event => { if(event.key === 'Enter' || event.key === 13 ) searchInputHelper() });
+  searchInput.addEventListener('keydown', event => { searchInputHelper() });
   
   searchButton.addEventListener('click', () => searchInputHelper());
 
@@ -468,3 +468,31 @@ async function getData() {
 }
 
 getData();
+
+class MyDuckType {
+  sayDich() {
+    return this.uebok();
+  }
+
+  sayOtherDich() {
+    return this.sToporom();
+  }
+}
+
+class Uebok extends MyDuckType {
+  uebok () {
+    return 'UEBOK';
+  }
+}
+
+class Stoporom extends MyDuckType {
+  sToporom () {
+    return 'S TOPORON'
+  }
+}
+
+let sToporom = new Uebok();
+
+let uebok = new Stoporom();
+
+let res = sToporom.sayDich() + ' ' + sToporom.sayOtherDich();
